@@ -135,6 +135,13 @@
 										</p>
 									</div>
 									<div class="row paraStyle">
+										<p><strong>Social Score : </strong>
+										     <span></span>
+											<span class="summaryStyle">{{getSocial(movie.title)}}</span>
+
+										</p>
+									</div>
+									<div class="row paraStyle">
 										<p><strong>Would you like to watch this movie : </strong>
 											<input type="radio" name="interest" value="yes" ng-click="updateYes(movie.title)"><label for="yes"> Yes</label>
 											<input type="radio" name="interest" value="no" ng-click="updateNo(movie.title)"><label for="no"> No</label>
@@ -245,6 +252,37 @@
 
 		  			loadPage();
 		  			getGenre();
+					
+					$scope.socialScore = {};
+					function getSocialBuzz(){
+					    
+		  				$http({
+		  					method: 'GET',
+		  					url: '/getSocialScore',
+		  				}).success(function(response){
+		  					if(response.returnstatus == "error"){
+		  						console.log(response.errors);
+		  					}
+		  					else if(response.returnstatus == "nodata"){
+		  						console.log("No Social found");
+		  					}
+		  					else{
+							    for(var i=0; i<response.length;i++){
+									$scope.socialScore[response[i].movieName] = response[i].socialScore.toFixed(2);
+								}
+							   
+		  					}
+		  				}).error(function(error){
+		  					console.log(error);
+		  				});
+						
+						
+		  			}
+					getSocialBuzz();
+					$scope.getSocial = function(movie){
+						console.log($scope.socialScore[movie]+""+movie);	
+						return $scope.socialScore[movie];
+					}
 
 		  			$scope.getGenreById = function(genre_ids){
 		  				var genre = [];

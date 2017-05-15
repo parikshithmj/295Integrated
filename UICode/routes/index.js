@@ -46,6 +46,44 @@ router.get('/logout', function(req, res){
 	});
 });
 
+/**
+//get Social Score
+router.get('/getSocialScore/:movieName',function(req, res){
+	db.movieDashBoard.find({movieName: req.params.movieName}, function(err, docs) {
+		console.log(docs);
+		if(err) {
+	  		console.log("Error");
+	  		res.send({"returnstatus":"error", "errors":err});
+	  	}
+	  	else if(!docs.length){
+	  		console.log("No data found");
+	  		res.send({"returnstatus":"nodata"});
+	  	}
+	  	else{
+	  		res.send(docs);
+	  	}
+	});
+});
+**/
+
+//get Social Score
+router.get('/getSocialScore',function(req, res){
+	db.movieDashBoard.find({},{movieName :true,socialScore:true}, function(err, docs) {
+		console.log(docs);
+		if(err) {
+	  		console.log("Error");
+	  		res.send({"returnstatus":"error", "errors":err});
+	  	}
+	  	else if(!docs.length){
+	  		console.log("No data found");
+	  		res.send({"returnstatus":"nodata"});
+	  	}
+	  	else{
+	  		res.send(docs);
+	  	}
+	});
+});
+
 //first time registration
 router.post('/savemovie', function(req, res) {
 	db.registration.find({"email": req.body.email}, function(err, users) {
@@ -169,7 +207,25 @@ router.get('/getmovieDataForMaker',function(req, res){
 	  	}
 	});
 });
+/**
 
+router.get('/getmovieDataForUser',function(req, res){
+	db.movieDashBoard.find({}, function(err, docs) {
+		console.log(docs);
+		if(err) {
+	  		console.log("Error");
+	  		res.send({"returnstatus":"error", "errors":err});
+	  	}
+	  	else if(!docs.length){
+	  		console.log("No data found");
+	  		res.send({"returnstatus":"nodata"});
+	  	}
+	  	else{
+	  		res.send(docs);
+	  	}
+	});
+});
+**/
 //get data for user dashboard
 router.get('/getmovieDataForUser',function(req, res){
 	db.upcomingMovies.find({}, function(err, docs) {
