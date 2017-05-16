@@ -131,7 +131,7 @@
 									</div>
 									<div class="row paraStyle">
 										<p><strong>Success Prediction : </strong>
-											<span class="summaryStyle">Hit</span>
+											<span class="summaryStyle">{{getFate(movie.title)}}</span>
 										</p>
 									</div>
 									<div class="row paraStyle">
@@ -148,43 +148,7 @@
 										</p>
 									</div>
 								</td>
-								<!--<td class="col-md-9">
-									<div class="row nameStyle">
-										<label>
-											<h1>{{movie.movie_title}} ({{movie.title_year}})</h1>
-										</label>
-									</div>
-									<div class="row genreStyle">
-										<label>
-											<h4><em>{{movie.Genre1 ? check(movie.Genre1):''}}</em></h4>
-										</label>
-									</div>
-									<div class="row paraStyle">
-										<p><strong>Director : </strong>
-											<span class="summaryStyle">{{movie.director_name}}</span>
-										</p>
-									</div>
-									<div class="row paraStyle">
-										<p><strong>Stars : </strong>
-											<span class="summaryStyle">{{movie.actor_1_name}}, {{movie.actor_2_name}}, {{movie.actor_3_name}}</span>
-										</p>
-									</div>
-									<div class="row paraStyle">
-										<p><strong>Language : </strong>
-											<span class="summaryStyle">{{movie.language}}</span>
-										</p>
-									</div>
-									<div class="row paraStyle">
-										<p><strong>Budget : </strong>
-											<span class="summaryStyle">${{movie.budget}}</span>
-										</p>
-									</div>
-									<div class="row paraStyle">
-										<p><strong>Duration : </strong>
-											<span class="summaryStyle">{{movie.duration}} minutes</span>
-										</p>
-									</div>
-								</td>-->
+								
 							</tr>
 						</tbody>
 					</table>
@@ -254,6 +218,7 @@
 		  			getGenre();
 					
 					$scope.socialScore = {};
+					$scope.fate = {};
 					function getSocialBuzz(){
 					    
 		  				$http({
@@ -279,10 +244,41 @@
 						
 		  			}
 					getSocialBuzz();
+					
 					$scope.getSocial = function(movie){
 						console.log($scope.socialScore[movie]+""+movie);	
 						return $scope.socialScore[movie];
 					}
+					
+					$scope.getFate = function(movie){
+						console.log($scope.fate[movie]+""+movie);	
+						return $scope.fate[movie];
+					}
+					
+					function getMovieFate(){
+		  				$http({
+		  					method: 'GET',
+		  					url: '/getMovieFate',
+		  				}).success(function(response){
+		  					if(response.returnstatus == "error"){
+		  						console.log(response.errors);
+		  					}
+		  					else if(response.returnstatus == "nodata"){
+		  						console.log("No Social found");
+		  					}
+		  					else{
+							    for(var i=0; i<response.length;i++){
+									$scope.fate[response[i].movieName] = response[i].fate;
+								}
+							   
+		  					}
+		  				}).error(function(error){
+		  					console.log(error);
+		  				});
+						
+						
+		  			}
+					getMovieFate();
 
 		  			$scope.getGenreById = function(genre_ids){
 		  				var genre = [];

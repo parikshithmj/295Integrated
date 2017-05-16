@@ -84,6 +84,24 @@ router.get('/getSocialScore',function(req, res){
 	});
 });
 
+//get Movie fate
+router.get('/getMovieFate',function(req, res){
+	db.movieDashBoard.find({},{movieName :true,fate:true}, function(err, docs) {
+		console.log(docs);
+		if(err) {
+	  		console.log("Error");
+	  		res.send({"returnstatus":"error", "errors":err});
+	  	}
+	  	else if(!docs.length){
+	  		console.log("No data found");
+	  		res.send({"returnstatus":"nodata"});
+	  	}
+	  	else{
+	  		res.send(docs);
+	  	}
+	});
+});
+
 //first time registration
 router.post('/savemovie', function(req, res) {
 	db.registration.find({"email": req.body.email}, function(err, users) {
